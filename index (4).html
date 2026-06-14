@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cut — Fat-Loss Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161B; --crimson:#C8102E; --crimson-soft:#E8556B;
+    --good:#16B877; --amber:#F2A218;
+    --base:#F6F4F0; --surface:#FFFFFF; --surface-2:#FBFAF8;
+    --line:#E8E3DC; --muted:#74706A; --muted-2:#9A958D;
+    --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif;
+    --r:18px; --r-sm:12px;
+    --shadow:0 1px 2px rgba(20,22,27,.04),0 8px 24px -12px rgba(20,22,27,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--base);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  body{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:96px;position:relative;overflow-x:hidden}
+  ::-webkit-scrollbar{width:0;height:0}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  h1,h2,h3{font-family:var(--disp);font-weight:700;letter-spacing:-.01em;line-height:1.05}
+  .num{font-family:var(--disp);font-variant-numeric:tabular-nums;font-weight:700}
+
+  /* Header */
+  header{padding:22px 20px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:linear-gradient(var(--base) 78%,transparent);z-index:20}
+  .brand{display:flex;align-items:baseline;gap:8px}
+  .brand .logo{font-family:var(--disp);font-weight:700;font-size:23px;letter-spacing:-.03em}
+  .brand .logo b{color:var(--crimson)}
+  .brand .tag{font-size:11px;color:var(--muted-2);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+  .scorechip{display:flex;align-items:center;gap:8px;background:var(--ink);color:#fff;padding:8px 13px;border-radius:999px}
+  .scorechip .s{font-family:var(--disp);font-weight:700;font-size:16px}
+  .scorechip .l{font-size:9.5px;color:#A9A39B;text-transform:uppercase;letter-spacing:.06em;line-height:1.15}
+
+  .view{padding:4px 16px;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .hide{display:none!important}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--crimson);font-family:var(--disp)}
+  .secthead{display:flex;align-items:flex-end;justify-content:space-between;margin:22px 4px 12px}
+  .secthead h2{font-size:21px}
+  .secthead .sub{font-size:12.5px;color:var(--muted)}
+
+  /* TODAY — hero ring */
+  .hero{padding:22px 20px 18px;margin-top:2px}
+  .hero .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+  .datestr{font-size:12.5px;color:var(--muted);font-weight:500}
+  .ringwrap{display:flex;align-items:center;gap:18px;margin-top:6px}
+  .ring{position:relative;flex:none;width:142px;height:142px}
+  .ring svg{transform:rotate(-90deg)}
+  .ringcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .ringcenter .big{font-family:var(--disp);font-weight:700;font-size:33px;line-height:1}
+  .ringcenter .unit{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+  .ringcenter .of{font-size:12px;color:var(--muted-2);margin-top:2px}
+  .macros{flex:1;display:flex;flex-direction:column;gap:13px}
+  .mrow .mtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+  .mrow .mname{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:.01em}
+  .mrow .mval{font-size:11.5px;color:var(--muted);font-family:var(--disp);font-variant-numeric:tabular-nums}
+  .mrow .mval b{color:var(--ink)}
+  .bar{height:7px;background:var(--line);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+  .bar.p i{background:var(--crimson)} .bar.c i{background:#3F7CD6} .bar.f i{background:var(--amber)}
+
+  /* Water */
+  .water{padding:18px 20px;margin-top:14px}
+  .water .wh{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+  .water .wh .n{font-family:var(--disp);font-weight:700;font-size:18px}
+  .glasses{display:flex;flex-wrap:wrap;gap:7px}
+  .glass{width:30px;height:38px;border-radius:5px 5px 7px 7px;border:2px solid var(--line);background:var(--surface-2);position:relative;overflow:hidden;transition:.2s}
+  .glass.full{border-color:#3F7CD6}
+  .glass.full::after{content:"";position:absolute;left:0;right:0;bottom:0;height:100%;background:linear-gradient(#7FB0EA,#3F7CD6)}
+  .wbtns{display:flex;gap:9px;margin-top:14px}
+  .wbtns button{flex:1;padding:10px;border-radius:var(--r-sm);font-weight:600;font-size:13.5px;border:1px solid var(--line);background:var(--surface-2)}
+  .wbtns button.add{background:#3F7CD6;color:#fff;border-color:#3F7CD6}
+
+  /* quick log + logged list */
+  .qadd{display:flex;gap:9px;overflow-x:auto;padding:2px 0 4px;margin:0 -2px}
+  .qchip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:13px;padding:11px 13px;min-width:124px;box-shadow:var(--shadow)}
+  .qchip .qn{font-size:12.5px;font-weight:600;line-height:1.2;margin-bottom:5px}
+  .qchip .qk{font-size:11px;color:var(--muted);font-family:var(--disp)}
+  .qchip .plus{margin-top:8px;display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--crimson)}
+
+  .logitem{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line)}
+  .logitem:last-child{border-bottom:none}
+  .logitem .li-name{flex:1;font-size:14px;font-weight:500}
+  .logitem .li-mac{font-size:11px;color:var(--muted);font-family:var(--disp);margin-top:2px}
+  .logitem .li-cal{font-family:var(--disp);font-weight:700;font-size:15px}
+  .logitem .x{width:26px;height:26px;border-radius:8px;background:var(--surface-2);color:var(--muted-2);font-size:14px;display:grid;place-items:center;flex:none}
+  .empty{padding:26px 18px;text-align:center;color:var(--muted-2);font-size:13.5px;line-height:1.5}
+
+  /* PLAN */
+  .daypick{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}
+  .daypick button{flex:none;width:46px;height:58px;border-radius:14px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:var(--shadow)}
+  .daypick button .dn{font-size:10px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+  .daypick button .dd{font-family:var(--disp);font-weight:700;font-size:18px}
+  .daypick button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .daypick button.on .dn{color:#A9A39B}
+  .daytotal{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;margin-bottom:14px}
+  .daytotal .dt-cal{font-family:var(--disp);font-weight:700;font-size:26px}
+  .daytotal .dt-cal span{font-size:13px;color:var(--muted);font-weight:500}
+  .dt-macros{display:flex;gap:14px;font-size:11.5px;color:var(--muted);font-family:var(--disp)}
+  .dt-macros b{color:var(--ink);font-size:14px}
+  .meal{display:flex;gap:13px;padding:14px;align-items:center;margin-bottom:10px}
+  .meal .slot{flex:none;width:52px;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--crimson);font-family:var(--disp);line-height:1.3}
+  .meal .mbody{flex:1}
+  .meal .mttl{font-size:14.5px;font-weight:600;line-height:1.2}
+  .meal .mmeta{font-size:11.5px;color:var(--muted);margin-top:4px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-family:var(--disp)}
+  .tag{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:99px;text-transform:uppercase;letter-spacing:.03em}
+  .tag.quick{background:#E6F6EE;color:#0E8A55}
+  .tag.prep{background:#FdeFe2;color:#C0721B}
+  .chev{color:var(--muted-2);font-size:18px;flex:none}
+
+  /* RECIPES grid */
+  .filterbar{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px}
+  .filterbar button{flex:none;padding:8px 14px;border-radius:99px;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+  .filterbar button.on{background:var(--crimson);border-color:var(--crimson);color:#fff}
+  .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .rcard{padding:15px 14px;text-align:left;display:flex;flex-direction:column;gap:8px;min-height:138px}
+  .rcard .rkcal{font-family:var(--disp);font-weight:700;font-size:21px}
+  .rcard .rkcal span{font-size:11px;color:var(--muted);font-weight:500}
+  .rcard .rname{font-size:13.5px;font-weight:600;line-height:1.25;flex:1}
+  .rcard .rmeta{font-size:10.5px;color:var(--muted);font-family:var(--disp);display:flex;justify-content:space-between;align-items:center}
+  .rdot{display:inline-block;width:6px;height:6px;border-radius:99px;background:var(--crimson);margin-right:5px}
+
+  /* MODAL recipe */
+  .scrim{position:fixed;inset:0;background:rgba(20,22,27,.42);backdrop-filter:blur(2px);z-index:60;opacity:0;pointer-events:none;transition:.25s}
+  .scrim.on{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;background:var(--base);border-radius:24px 24px 0 0;z-index:61;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);max-height:92vh;display:flex;flex-direction:column}
+  .sheet.on{transform:none}
+  .grab{width:40px;height:4px;background:var(--line);border-radius:99px;margin:10px auto 4px;flex:none}
+  .sheet-scroll{overflow-y:auto;padding:8px 20px 28px}
+  .sheet h2{font-size:23px;margin:6px 0 4px}
+  .sheet .rsub{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .macrostat{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:20px}
+  .macrostat .ms{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:11px 8px;text-align:center}
+  .macrostat .ms .v{font-family:var(--disp);font-weight:700;font-size:18px}
+  .macrostat .ms .k{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .sheet h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin:18px 0 10px;font-family:var(--disp)}
+  .ing{display:flex;gap:11px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:baseline}
+  .ing .amt{font-family:var(--disp);font-weight:600;color:var(--crimson);min-width:74px;font-size:13px}
+  .step{display:flex;gap:13px;padding:11px 0;align-items:flex-start}
+  .step .sn{flex:none;width:24px;height:24px;border-radius:99px;background:var(--ink);color:#fff;font-family:var(--disp);font-weight:700;font-size:12px;display:grid;place-items:center}
+  .step p{font-size:14px;line-height:1.5;padding-top:2px}
+  .logbtn{position:sticky;bottom:0;padding:14px 0 4px;background:linear-gradient(transparent,var(--base) 26%)}
+  .logbtn button{width:100%;padding:15px;border-radius:14px;background:var(--crimson);color:#fff;font-weight:700;font-size:15px;font-family:var(--disp);letter-spacing:.01em}
+
+  /* PROGRESS */
+  .bigstat{display:flex;gap:12px;margin-bottom:6px}
+  .bigstat .bs{flex:1;padding:16px 14px}
+  .bigstat .bs .v{font-family:var(--disp);font-weight:700;font-size:27px;line-height:1}
+  .bigstat .bs .v small{font-size:13px;color:var(--muted);font-weight:500}
+  .bigstat .bs .k{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.02em}
+  .bigstat .bs.accent{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bigstat .bs.accent .k{color:#A9A39B}
+  .progwrap{padding:18px}
+  .progline{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-family:var(--disp);margin-top:8px}
+  .chart{width:100%;height:170px;margin-top:6px}
+  .wlog{display:flex;gap:9px;margin-top:14px}
+  .wlog input{flex:1;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:var(--surface-2);font-family:var(--disp);font-weight:600;font-size:15px;color:var(--ink)}
+  .wlog input:focus{outline:none;border-color:var(--crimson)}
+  .wlog button{padding:0 20px;border-radius:13px;background:var(--ink);color:#fff;font-weight:600;font-size:14px}
+  .whist{margin-top:14px}
+  .whist .wh-row{display:flex;justify-content:space-between;padding:11px 2px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .whist .wh-row .wh-d{color:var(--muted)}
+  .whist .wh-row .wh-k{font-family:var(--disp);font-weight:600}
+  .whist .wh-row .wh-delta{font-size:11px;font-family:var(--disp);font-weight:600}
+  .down{color:var(--good)} .up{color:var(--crimson)}
+
+  .note{font-size:11.5px;color:var(--muted-2);line-height:1.55;padding:16px 6px 4px;text-align:center}
+
+  /* NAV */
+  nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:0 auto;background:rgba(255,255,255,.86);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:40}
+  nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;color:var(--muted-2);font-size:10px;font-weight:600;letter-spacing:.01em}
+  nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  nav button.on{color:var(--crimson)}
+  .toast{position:fixed;bottom:104px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:99px;font-size:13px;font-weight:600;z-index:80;opacity:0;transition:.3s;white-space:nowrap;box-shadow:0 8px 28px -8px rgba(0,0,0,.4)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="logo"><b>Cut</b>.</span>
+    <span class="tag">Fat-loss plan</span>
+    <span id="syncDot" title="Saved on this device" style="width:7px;height:7px;border-radius:99px;background:var(--muted-2);display:inline-block;align-self:center"></span>
+  </div>
+  <div class="scorechip">
+    <span class="s">68</span>
+    <span class="l">InBody<br>score</span>
+  </div>
+</header>
+
+<!-- TODAY -->
+<section class="view" id="v-today">
+  <div class="card hero">
+    <div class="top">
+      <div>
+        <div class="eyebrow">Today's fuel</div>
+      </div>
+      <div class="datestr" id="todayDate">—</div>
+    </div>
+    <div class="ringwrap">
+      <div class="ring">
+        <svg width="142" height="142" viewBox="0 0 142 142">
+          <circle cx="71" cy="71" r="62" stroke="var(--line)" stroke-width="13" fill="none"/>
+          <circle id="calArc" cx="71" cy="71" r="62" stroke="var(--crimson)" stroke-width="13" fill="none"
+                  stroke-linecap="round" stroke-dasharray="389.6" stroke-dashoffset="389.6"
+                  style="transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1)"/>
+        </svg>
+        <div class="ringcenter">
+          <div class="big" id="calLeft">1800</div>
+          <div class="unit">kcal left</div>
+          <div class="of" id="calOf">0 / 1800</div>
+        </div>
+      </div>
+      <div class="macros">
+        <div class="mrow">
+          <div class="mtop"><span class="mname">Protein</span><span class="mval"><b id="pv">0</b>/200g</span></div>
+          <div class="bar p"><i id="pbar" style="width:0%"></i></div>
+        </div>
+        <div class="mrow">
+          <div class="mtop"><span class="mname">Carbs</span><span class="mval"><b id="cv">0</b>/135g</span></div>
+          <div class="bar c"><i id="cbar" style="width:0%"></i></div>
+        </div>
+        <div class="mrow">
+          <div class="mtop"><span class="mname">Fat</span><span class="mval"><b id="fv">0</b>/50g</span></div>
+          <div class="bar f"><i id="fbar" style="width:0%"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card water">
+    <div class="wh">
+      <div class="eyebrow">Water</div>
+      <div class="n"><span id="waterMl">0.0</span><span style="font-size:12px;color:var(--muted);font-weight:500"> / 3.25 L</span></div>
+    </div>
+    <div class="glasses" id="glasses"></div>
+    <div class="wbtns">
+      <button onclick="addWater(-1)">− Glass</button>
+      <button class="add" onclick="addWater(1)">+ Glass (250 ml)</button>
+    </div>
+  </div>
+
+  <div class="secthead"><h2>Quick log</h2><span class="sub">tap to add</span></div>
+  <div class="qadd" id="quickAdd"></div>
+
+  <div class="secthead"><h2>Eaten today</h2><span class="sub" id="logCount">0 items</span></div>
+  <div class="card" id="logList"></div>
+</section>
+
+<!-- PLAN -->
+<section class="view hide" id="v-plan">
+  <div class="secthead" style="margin-top:8px"><h2>7-day plan</h2><span class="sub">~1,800 kcal · 200g protein</span></div>
+  <div class="daypick" id="daypick"></div>
+  <div class="card daytotal">
+    <div class="dt-cal" id="dtCal">—<span> kcal</span></div>
+    <div class="dt-macros">
+      <div><b id="dtP">—</b><br>protein</div>
+      <div><b id="dtC">—</b><br>carbs</div>
+      <div><b id="dtF">—</b><br>fat</div>
+    </div>
+  </div>
+  <div id="planMeals"></div>
+  <p class="note">Totals are estimates. Aim for the band: 1,700–1,900 kcal and 200g protein daily. Most days need an extra protein hit — add the smoothie or a scoop of whey to reach 200g.</p>
+</section>
+
+<!-- RECIPES -->
+<section class="view hide" id="v-recipes">
+  <div class="secthead" style="margin-top:8px"><h2>Recipes</h2><span class="sub">all halal · no pork, alcohol, shrimp</span></div>
+  <div class="filterbar" id="filterbar"></div>
+  <div class="rgrid" id="rgrid"></div>
+</section>
+
+<!-- PROGRESS -->
+<section class="view hide" id="v-progress">
+  <div class="secthead" style="margin-top:8px"><h2>Progress</h2><span class="sub">goal 85.9 kg</span></div>
+  <div class="bigstat">
+    <div class="card bs accent"><div class="v" id="curW">—<small> kg</small></div><div class="k">Current weight</div></div>
+    <div class="card bs"><div class="v down" id="lostW">—<small> kg</small></div><div class="k">Lost so far</div></div>
+  </div>
+  <div class="card progwrap" style="margin-top:14px">
+    <div class="eyebrow">Journey to goal</div>
+    <svg class="chart" id="chart" viewBox="0 0 320 170" preserveAspectRatio="none"></svg>
+    <div class="progline"><span id="startLbl">Start 107.4</span><span id="goalLbl">Goal 85.9</span></div>
+    <div class="wlog">
+      <input id="wInput" type="number" inputmode="decimal" placeholder="Log today's weight (kg)" step="0.1">
+      <button onclick="logWeight()">Save</button>
+    </div>
+    <div class="whist" id="whist"></div>
+  </div>
+  <p class="note">At a steady ~0.8–1 kg/week you'll clear the obese BMI range within ~3 months. Visceral fat (level 14) drops fastest early — keep cardio steady. Weigh weekly, same time, morning.<br><br>This is a planning tool, not medical advice. With visceral fat that high, a quick check-up before going aggressive is smart.</p>
+</section>
+
+<!-- RECIPE SHEET -->
+<div class="scrim" id="scrim" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <div class="sheet-scroll" id="sheetBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav>
+  <button class="on" data-v="today" onclick="go('today')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Today</button>
+  <button data-v="plan" onclick="go('plan')">
+    <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M9 3v4M15 3v4"/></svg>Plan</button>
+  <button data-v="recipes" onclick="go('recipes')">
+    <svg viewBox="0 0 24 24"><path d="M5 3v7a3 3 0 0 0 6 0V3M8 3v18M16 3c-1.5 1-2 3-2 5s.5 4 2 4v9"/></svg>Recipes</button>
+  <button data-v="progress" onclick="go('progress')">
+    <svg viewBox="0 0 24 24"><path d="M4 19V5M4 15l5-5 4 3 7-7M20 6v4h-4"/></svg>Progress</button>
+</nav>
+
+<!-- Firebase compat SDK (keeps the app's inline onclick handlers working) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ============================================================
+   FIREBASE CONFIG  —  paste your web app's config below.
+   Firebase Console > Project settings > Your apps > Web > SDK setup.
+   These values are meant to be public; security is enforced by
+   Firestore rules (see README), not by hiding the keys.
+   Until you paste real keys the app stores data on the device only.
+============================================================ */
+const FB_CONFIG = {
+  apiKey: "AIzaSyAgq8NeDq1xrnY-NtiAjpH7nlhQwGi-_Vc",
+  authDomain: "cut-d1167.firebaseapp.com",
+  projectId: "cut-d1167",
+  storageBucket: "cut-d1167.firebasestorage.app",
+  messagingSenderId: "137834108572",
+  appId: "1:137834108572:web:d5108206ed56569561ff59",
+  measurementId: "G-QRDDVLZTG5"
+};
+const FB_ENABLED = !String(FB_CONFIG.apiKey).startsWith("PASTE");
+let db = null, uid = null;
+
+async function initFirebase(){
+  if(!FB_ENABLED || typeof firebase === 'undefined') { setSync('local'); return false; }
+  try{
+    firebase.initializeApp(FB_CONFIG);
+    db = firebase.firestore();
+    const cred = await firebase.auth().signInAnonymously();
+    uid = cred.user.uid;
+    setSync('cloud');
+    return true;
+  }catch(e){ console.warn('Firebase unavailable, using on-device storage:', e.message); setSync('local'); return false; }
+}
+function setSync(mode){
+  const el = document.getElementById('syncDot'); if(!el) return;
+  const map = { cloud:['var(--good)','Synced to Firebase'], saving:['var(--amber)','Saving…'],
+                error:['var(--crimson)','Sync error — saved locally'], local:['var(--muted-2)','Saved on this device'] };
+  const [bg,title] = map[mode]||map.local; el.style.background=bg; el.title=title;
+}
+
+/* ---------- TARGETS (from InBody: 184cm, 23M, 107.4kg, 32% BF) ---------- */
+const T = { cal:1800, p:200, c:135, f:50, water:13 }; // water = glasses of 250ml (3.25L)
+const START_W = 107.4, GOAL_W = 85.9, START_DATE = '2026-06-13';
+
+/* ---------- RECIPES (halal, no pork/alcohol/shrimp) ---------- */
+const R = [
+ {id:1,name:'Power Protein Oats',slot:'Breakfast',cat:'Breakfast',time:10,kind:'quick',cal:520,p:42,c:58,f:14,
+  sub:'Creamy overnight-style oats that actually keep you full till lunch.',
+  ing:[['80 g','rolled oats'],['1 scoop','whey protein (vanilla)'],['200 ml','skim milk'],['100 g','mixed berries'],['1 tbsp','peanut butter'],['pinch','cinnamon']],
+  steps:['Stir oats, milk and cinnamon in a bowl or jar.','Mix in the whey until smooth (add a splash more milk if thick).','Top with berries and a swirl of peanut butter.','Eat right away, or chill overnight for grab-and-go.']},
+ {id:2,name:'Shakshuka with Eggs',slot:'Breakfast',cat:'Breakfast',time:20,kind:'quick',cal:430,p:26,c:30,f:22,
+  sub:'Eggs poached in spiced tomato — a Middle Eastern classic.',
+  ing:[['3','eggs'],['1 can','chopped tomatoes'],['1','onion, diced'],['1','bell pepper, sliced'],['2 cloves','garlic'],['1 tsp','cumin + paprika'],['½','wholewheat pita']],
+  steps:['Soften onion, pepper and garlic in a little olive oil.','Add tomatoes and spices; simmer 8 min until thick.','Make 3 wells, crack in the eggs, cover and cook 5 min.','Scoop up with half a warm pita.']},
+ {id:3,name:'Greek Yogurt Power Bowl',slot:'Breakfast',cat:'Breakfast',time:5,kind:'quick',cal:380,p:32,c:52,f:5,
+  sub:'High protein, near-zero effort.',
+  ing:[['250 g','0% Greek yogurt'],['30 g','granola'],['1','banana, sliced'],['1 tsp','honey'],['1 tbsp','chia seeds']],
+  steps:['Spoon yogurt into a bowl.','Top with banana, granola and chia.','Drizzle honey. Done.']},
+ {id:4,name:'Grilled Chicken & Rice Bowl',slot:'Lunch',cat:'Lunch',time:25,kind:'prep',cal:620,p:58,c:62,f:13,
+  sub:'The workhorse meal — meal-prep four at once.',
+  ing:[['200 g','chicken breast'],['150 g','cooked basmati rice'],['2 cups','salad leaves + cucumber'],['2 tbsp','0% yogurt + lemon + garlic'],['1 tsp','olive oil'],['spices','paprika, cumin, salt']],
+  steps:['Season chicken; grill or pan-cook 6–7 min per side until 74°C inside.','Rest 3 min, then slice.','Box rice, salad and chicken together.','Whisk yogurt, lemon and garlic into a sauce; drizzle over.']},
+ {id:5,name:'Beef & Veggie Stir-Fry',slot:'Dinner',cat:'Dinner',time:20,kind:'quick',cal:580,p:48,c:50,f:18,
+  sub:'Fast, savoury, loaded with veg.',
+  ing:[['180 g','lean beef strips'],['2 cups','mixed veg (broccoli, pepper, carrot)'],['120 g','cooked rice'],['2 tbsp','low-sodium soy sauce'],['2 cloves','garlic + ginger'],['1 tsp','sesame oil']],
+  steps:['Sear beef in a hot pan 2 min; set aside.','Stir-fry veg with garlic and ginger 4 min.','Return beef, add soy and sesame oil, toss 1 min.','Serve over rice.']},
+ {id:6,name:'Lemon Herb Baked Salmon',slot:'Dinner',cat:'Dinner',time:25,kind:'prep',cal:560,p:42,c:38,f:26,
+  sub:'Omega-3s and a clean plate.',
+  ing:[['180 g','salmon fillet'],['200 g','baby potatoes'],['1 bunch','asparagus'],['1','lemon'],['1 tbsp','olive oil'],['herbs','dill, garlic, salt']],
+  steps:['Heat oven to 200°C. Halve potatoes, toss in oil, roast 15 min.','Add salmon and asparagus to the tray.','Top salmon with lemon, dill and garlic.','Bake 12 min until salmon flakes.']},
+ {id:7,name:'Turkey Lettuce Wraps',slot:'Dinner',cat:'Dinner',time:15,kind:'quick',cal:360,p:44,c:14,f:14,
+  sub:'Low-carb, high-protein, crunchy.',
+  ing:[['200 g','turkey mince'],['1 head','baby gem lettuce'],['½','onion + 1 carrot, diced'],['2 tbsp','low-sodium soy / hoisin'],['1 clove','garlic'],['1 tsp','olive oil']],
+  steps:['Brown turkey with garlic and onion.','Add carrot and soy; cook 4 min.','Spoon into lettuce cups and roll up.']},
+ {id:8,name:'Chicken Shawarma Bowl',slot:'Lunch',cat:'Lunch',time:30,kind:'prep',cal:640,p:50,c:55,f:22,
+  sub:'All the shawarma flavour, built as a bowl.',
+  ing:[['200 g','chicken thigh, sliced'],['1 tbsp','shawarma spice'],['100 g','cooked rice'],['1 cup','salad + pickles'],['2 tbsp','light garlic toum'],['1 tsp','olive oil']],
+  steps:['Toss chicken with shawarma spice and oil; marinate 15 min.','Pan-cook over high heat until charred and cooked through.','Build the bowl: rice, chicken, salad, pickles.','Finish with a small spoon of garlic toum.']},
+ {id:9,name:'Lentil & Chicken Soup',slot:'Lunch',cat:'Lunch',time:35,kind:'prep',cal:420,p:38,c:48,f:8,
+  sub:'Big batch, freezes well, fibre-rich.',
+  ing:[['150 g','red lentils'],['150 g','chicken breast, diced'],['1','onion + 1 carrot'],['1 tsp','cumin + turmeric'],['1 L','chicken stock'],['½','lemon']],
+  steps:['Soften onion and carrot in a pot.','Add chicken, lentils, spices and stock.','Simmer 25 min until lentils break down.','Finish with a squeeze of lemon. Blend half for a thicker soup.']},
+ {id:10,name:'Tuna & White Bean Salad',slot:'Lunch',cat:'Lunch',time:8,kind:'quick',cal:410,p:40,c:36,f:11,
+  sub:'No cooking, 8 minutes, 40g protein.',
+  ing:[['1 can','tuna in water, drained'],['1 can','white beans, rinsed'],['1','tomato + ½ red onion'],['1 tbsp','olive oil + lemon'],['handful','parsley'],['pinch','salt + pepper']],
+  steps:['Flake tuna into a bowl with the beans.','Add chopped tomato, onion and parsley.','Dress with oil and lemon; toss and serve.']},
+ {id:11,name:'Beef & Egg Scramble',slot:'Breakfast',cat:'Breakfast',time:12,kind:'quick',cal:420,p:40,c:6,f:26,
+  sub:'A serious protein breakfast for training days.',
+  ing:[['3','eggs'],['80 g','lean beef mince'],['½','onion + handful spinach'],['1 tsp','olive oil'],['spices','salt, pepper, chili']],
+  steps:['Brown the beef with onion in a pan.','Add spinach until wilted.','Pour in beaten eggs; scramble gently 2 min.','Season and serve hot.']},
+ {id:12,name:'Choc-PB Protein Smoothie',slot:'Snack',cat:'Snack',time:5,kind:'quick',cal:380,p:35,c:35,f:11,
+  sub:'Tastes like dessert, built for recovery.',
+  ing:[['1 scoop','chocolate whey'],['1','banana'],['200 ml','milk'],['1 tbsp','peanut butter'],['1 tsp','cocoa'],['ice','to blend']],
+  steps:['Add everything to a blender.','Blend until smooth.','Pour and drink — great post-workout.']},
+ {id:13,name:'Labneh & Veggie Plate',slot:'Snack',cat:'Snack',time:5,kind:'quick',cal:240,p:16,c:10,f:15,
+  sub:'A light, savoury snack to top up your day.',
+  ing:[['150 g','labneh'],['1','cucumber, sliced'],['handful','cherry tomatoes'],['1 tsp','olive oil'],['1 tsp','za\'atar'],['few','olives']],
+  steps:['Spread labneh on a plate.','Drizzle oil and sprinkle za\'atar.','Serve with cucumber, tomato and olives.']},
+ {id:14,name:'Cottage Cheese Egg Toast',slot:'Breakfast',cat:'Breakfast',time:8,kind:'quick',cal:360,p:38,c:24,f:14,
+  sub:'Two fast protein sources on one slice.',
+  ing:[['150 g','cottage cheese'],['2','eggs'],['1 slice','wholewheat toast'],['½','tomato, sliced'],['pinch','salt, pepper, chili flakes']],
+  steps:['Fry or scramble the eggs to your liking.','Toast the bread and spread on the cottage cheese.','Top with the eggs and tomato.','Season and eat warm.']},
+ {id:15,name:'Chicken & Hummus Wrap',slot:'Lunch',cat:'Lunch',time:10,kind:'quick',cal:470,p:45,c:38,f:14,
+  sub:'Five minutes if your chicken is already cooked.',
+  ing:[['150 g','cooked chicken, sliced'],['1','wholewheat tortilla'],['2 tbsp','hummus'],['1 cup','salad leaves + cucumber'],['squeeze','lemon']],
+  steps:['Spread hummus over the tortilla.','Layer chicken and salad down the middle.','Squeeze over lemon, roll tightly and slice in half.']},
+ {id:16,name:'Tuna Cucumber Boats',slot:'Snack',cat:'Snack',time:7,kind:'quick',cal:230,p:38,c:8,f:5,
+  sub:'38g protein, barely any carbs, no cooking.',
+  ing:[['1 can','tuna in water, drained'],['1','large cucumber'],['1 tbsp','0% yogurt'],['squeeze','lemon'],['handful','parsley + salt']],
+  steps:['Halve the cucumber lengthways and scoop out the seeds.','Mix tuna with yogurt, lemon and parsley.','Spoon into the cucumber hollows and serve.']},
+ {id:17,name:'Banana Protein Pancakes',slot:'Breakfast',cat:'Breakfast',time:12,kind:'quick',cal:430,p:40,c:42,f:11,
+  sub:'Three-ingredient batter, no flour needed.',
+  ing:[['1','ripe banana'],['2','eggs'],['1 scoop','whey protein'],['30 g','oats'],['spray','oil for the pan']],
+  steps:['Blend or mash everything into a batter.','Cook small pancakes 1–2 min per side over medium heat.','Stack and top with a little yogurt or berries.']},
+ {id:18,name:'Garlic Yogurt Chicken Bowl',slot:'Dinner',cat:'Dinner',time:15,kind:'quick',cal:400,p:52,c:12,f:14,
+  sub:'High protein, low carb, big flavour.',
+  ing:[['200 g','chicken breast, diced'],['3 tbsp','0% yogurt'],['2 cloves','garlic, grated'],['2 cups','salad + cucumber'],['1 tsp','olive oil + lemon'],['spices','paprika, cumin']],
+  steps:['Pan-cook the spiced chicken in olive oil until golden.','Mix yogurt, garlic and lemon into a sauce.','Plate chicken over salad and spoon the garlic sauce on top.']},
+ {id:19,name:'Feta & Spinach Omelette',slot:'Breakfast',cat:'Breakfast',time:10,kind:'quick',cal:380,p:34,c:5,f:25,
+  sub:'Low-carb, ready before your coffee is.',
+  ing:[['3','eggs + 2 egg whites'],['30 g','feta, crumbled'],['1 cup','spinach'],['1 tsp','olive oil'],['pinch','salt + pepper']],
+  steps:['Wilt the spinach in a little oil.','Pour in the beaten eggs and let them set.','Scatter feta over one half and fold.','Slide onto a plate and serve.']},
+ {id:20,name:'Beef Kofta Skewers',slot:'Dinner',cat:'Dinner',time:20,kind:'quick',cal:420,p:42,c:8,f:24,
+  sub:'Grill-ready in minutes, great for prep too.',
+  ing:[['200 g','lean beef mince'],['¼','onion, grated'],['handful','parsley, chopped'],['1 tsp','cumin + coriander + salt'],['2 cups','side salad']],
+  steps:['Mix beef with onion, parsley and spices.','Shape onto skewers or into small logs.','Grill or pan-cook 8–10 min, turning, until cooked through.','Serve with a fresh salad.']},
+ {id:21,name:'Chickpea & Egg Power Bowl',slot:'Lunch',cat:'Lunch',time:10,kind:'quick',cal:440,p:28,c:40,f:18,
+  sub:'Pantry-friendly, filling, no stove for the chickpeas.',
+  ing:[['150 g','chickpeas, rinsed'],['2','boiled eggs, halved'],['1','tomato + ½ cucumber'],['1 tbsp','olive oil + lemon'],['pinch','cumin, salt, parsley']],
+  steps:['Tip chickpeas into a bowl with chopped tomato and cucumber.','Add the halved boiled eggs.','Dress with oil, lemon and cumin; toss gently.']},
+];
+const byId = id => R.find(r=>r.id===id);
+
+/* 7-day plan: recipe ids per day */
+const PLAN = [
+  [1,4,3,7],
+  [11,8,10,12],
+  [11,5,6,3],
+  [3,9,4,7],
+  [1,8,10,3],
+  [11,4,12,7],
+  [3,6,8,7],
+];
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+/* ---------- STATE + STORAGE ---------- */
+let state = { log:{}, water:{}, weight:[{date:START_DATE, kg:START_W}] };
+const todayKey = () => new Date().toISOString().slice(0,10);
+
+async function loadState(){
+  try{
+    if(db && uid){
+      const snap = await db.collection('users').doc(uid).get();
+      if(snap.exists && snap.data().state){ state = JSON.parse(snap.data().state); }
+    } else {
+      const raw = localStorage.getItem('cut-state'); if(raw) state = JSON.parse(raw);
+    }
+  }catch(e){ console.warn('Load failed:', e.message); }
+  if(!state.weight || !state.weight.length) state.weight=[{date:START_DATE,kg:START_W}];
+  if(!state.log) state.log={}; if(!state.water) state.water={};
+}
+let _saveT;
+async function saveState(){
+  clearTimeout(_saveT);
+  _saveT = setTimeout(async ()=>{
+    try{
+      if(db && uid){
+        setSync('saving');
+        await db.collection('users').doc(uid).set({ state: JSON.stringify(state), updated: Date.now() });
+        setSync('cloud');
+      } else {
+        localStorage.setItem('cut-state', JSON.stringify(state));
+      }
+    }catch(e){ console.warn('Save failed:', e.message); setSync('error'); }
+  }, 350);
+}
+
+/* ---------- TODAY ---------- */
+function todayTotals(){
+  const items = state.log[todayKey()]||[];
+  return items.reduce((a,i)=>({cal:a.cal+i.cal,p:a.p+i.p,c:a.c+i.c,f:a.f+i.f}),{cal:0,p:0,c:0,f:0});
+}
+function renderToday(){
+  document.getElementById('todayDate').textContent =
+    new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'});
+  const t = todayTotals();
+  const left = Math.max(0, T.cal - t.cal);
+  document.getElementById('calLeft').textContent = left;
+  document.getElementById('calOf').textContent = `${t.cal} / ${T.cal}`;
+  const frac = Math.min(1, t.cal/T.cal);
+  const C = 389.6;
+  const arc = document.getElementById('calArc');
+  arc.style.strokeDashoffset = C - C*frac;
+  arc.setAttribute('stroke', t.cal>T.cal ? 'var(--amber)' : 'var(--crimson)');
+  const set=(id,bar,val,tgt)=>{
+    document.getElementById(id).textContent = Math.round(val);
+    document.getElementById(bar).style.width = Math.min(100,(val/tgt)*100)+'%';
+  };
+  set('pv','pbar',t.p,T.p); set('cv','cbar',t.c,T.c); set('fv','fbar',t.f,T.f);
+
+  // water
+  const w = state.water[todayKey()]||0;
+  document.getElementById('waterMl').textContent = (w*0.25).toFixed(2);
+  const g = document.getElementById('glasses'); g.innerHTML='';
+  for(let i=0;i<T.water;i++){ const el=document.createElement('div'); el.className='glass'+(i<w?' full':''); g.appendChild(el); }
+
+  // quick add (a handful of high-protein staples)
+  const qa = document.getElementById('quickAdd'); qa.innerHTML='';
+  [3,10,12,4,7,13].forEach(id=>{ const r=byId(id);
+    const c=document.createElement('button'); c.className='qchip';
+    c.innerHTML=`<div class="qn">${r.name}</div><div class="qk">${r.cal} kcal · ${r.p}g P</div><div class="plus">+ Log</div>`;
+    c.onclick=()=>logFood(r); qa.appendChild(c);
+  });
+
+  // logged list
+  const items = state.log[todayKey()]||[];
+  document.getElementById('logCount').textContent = items.length+' item'+(items.length===1?'':'s');
+  const list=document.getElementById('logList');
+  if(!items.length){ list.innerHTML='<div class="empty">Nothing logged yet.<br>Tap a quick-log card or open a recipe.</div>'; return; }
+  list.innerHTML='';
+  items.forEach((it,idx)=>{
+    const row=document.createElement('div'); row.className='logitem';
+    row.innerHTML=`<div style="flex:1"><div class="li-name">${it.name}</div><div class="li-mac">${it.p}P · ${it.c}C · ${it.f}F</div></div>
+      <div class="li-cal">${it.cal}</div><button class="x">✕</button>`;
+    row.querySelector('.x').onclick=()=>{ items.splice(idx,1); saveState(); renderToday(); };
+    list.appendChild(row);
+  });
+}
+function logFood(r){
+  const k=todayKey(); if(!state.log[k]) state.log[k]=[];
+  state.log[k].push({name:r.name,cal:r.cal,p:r.p,c:r.c,f:r.f});
+  saveState(); renderToday(); toast(r.name+' logged');
+}
+function addWater(n){
+  const k=todayKey(); state.water[k]=Math.max(0,(state.water[k]||0)+n);
+  saveState(); renderToday();
+}
+
+/* ---------- PLAN ---------- */
+let curDay=0;
+function renderPlan(){
+  const dp=document.getElementById('daypick'); dp.innerHTML='';
+  DAYS.forEach((d,i)=>{ const b=document.createElement('button'); b.className=i===curDay?'on':'';
+    b.innerHTML=`<span class="dn">${d}</span><span class="dd">${i+1}</span>`;
+    b.onclick=()=>{curDay=i;renderPlan();}; dp.appendChild(b);
+  });
+  const ids=PLAN[curDay]; const tot=ids.map(byId).reduce((a,r)=>({cal:a.cal+r.cal,p:a.p+r.p,c:a.c+r.c,f:a.f+r.f}),{cal:0,p:0,c:0,f:0});
+  document.getElementById('dtCal').innerHTML=`${tot.cal}<span> kcal</span>`;
+  document.getElementById('dtP').textContent=tot.p+'g';
+  document.getElementById('dtC').textContent=tot.c+'g';
+  document.getElementById('dtF').textContent=tot.f+'g';
+  const pm=document.getElementById('planMeals'); pm.innerHTML='';
+  ids.map(byId).forEach(r=>{
+    const m=document.createElement('button'); m.className='card meal'; m.style.width='100%';
+    m.innerHTML=`<div class="slot">${r.slot}</div>
+      <div class="mbody"><div class="mttl">${r.name}</div>
+      <div class="mmeta"><span class="tag ${r.kind}">${r.kind}</span><span>${r.cal} kcal</span><span>${r.p}g P</span><span>${r.time} min</span></div></div>
+      <div class="chev">›</div>`;
+    m.onclick=()=>openSheet(r.id); pm.appendChild(m);
+  });
+}
+
+/* ---------- RECIPES ---------- */
+let filter='All';
+function renderRecipes(){
+  const cats=['All','Breakfast','Lunch','Dinner','Snack'];
+  const fb=document.getElementById('filterbar'); fb.innerHTML='';
+  cats.forEach(c=>{ const b=document.createElement('button'); b.className=c===filter?'on':''; b.textContent=c;
+    b.onclick=()=>{filter=c;renderRecipes();}; fb.appendChild(b);
+  });
+  const grid=document.getElementById('rgrid'); grid.innerHTML='';
+  R.filter(r=>filter==='All'||r.cat===filter).forEach(r=>{
+    const c=document.createElement('button'); c.className='card rcard';
+    c.innerHTML=`<div class="rkcal">${r.cal}<span> kcal</span></div>
+      <div class="rname">${r.name}</div>
+      <div class="rmeta"><span><span class="rdot"></span>${r.p}g protein</span><span>${r.time}m</span></div>`;
+    c.onclick=()=>openSheet(r.id); grid.appendChild(c);
+  });
+}
+
+/* ---------- SHEET ---------- */
+function openSheet(id){
+  const r=byId(id);
+  document.getElementById('sheetBody').innerHTML=`
+    <div class="eyebrow">${r.slot} · ${r.kind==='quick'?'Quick':'Meal prep'} · ${r.time} min</div>
+    <h2>${r.name}</h2>
+    <div class="rsub">${r.sub}</div>
+    <div class="macrostat">
+      <div class="ms"><div class="v">${r.cal}</div><div class="k">kcal</div></div>
+      <div class="ms"><div class="v">${r.p}</div><div class="k">protein</div></div>
+      <div class="ms"><div class="v">${r.c}</div><div class="k">carbs</div></div>
+      <div class="ms"><div class="v">${r.f}</div><div class="k">fat</div></div>
+    </div>
+    <h3>Ingredients</h3>
+    ${r.ing.map(i=>`<div class="ing"><span class="amt">${i[0]}</span><span>${i[1]}</span></div>`).join('')}
+    <h3>Method</h3>
+    ${r.steps.map((s,i)=>`<div class="step"><div class="sn">${i+1}</div><p>${s}</p></div>`).join('')}
+    <div class="logbtn"><button onclick="logFood(byId(${r.id}));closeSheet()">Log this meal · ${r.cal} kcal</button></div>`;
+  document.getElementById('scrim').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+  document.getElementById('sheetBody').scrollTop=0;
+}
+function closeSheet(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); }
+
+/* ---------- PROGRESS ---------- */
+function renderProgress(){
+  const w=state.weight; const cur=w[w.length-1].kg;
+  document.getElementById('curW').innerHTML=`${cur.toFixed(1)}<small> kg</small>`;
+  const lost=(START_W-cur);
+  document.getElementById('lostW').innerHTML=`${lost>=0?'−':'+'}${Math.abs(lost).toFixed(1)}<small> kg</small>`;
+  document.getElementById('lostW').className='v '+(lost>=0?'down':'up');
+
+  // chart
+  const W=320,H=170,pad=14;
+  const minY=Math.min(GOAL_W-2, ...w.map(p=>p.kg))-1;
+  const maxY=Math.max(START_W, ...w.map(p=>p.kg))+1;
+  const xs=i=> w.length<2? W/2 : pad + i*(W-2*pad)/(w.length-1);
+  const ys=v=> H-pad - (v-minY)/(maxY-minY)*(H-2*pad);
+  const gy=ys(GOAL_W);
+  let d=''; w.forEach((p,i)=>{ d+=(i?'L':'M')+xs(i).toFixed(1)+' '+ys(p.kg).toFixed(1)+' '; });
+  let dots=w.map((p,i)=>`<circle cx="${xs(i).toFixed(1)}" cy="${ys(p.kg).toFixed(1)}" r="3.5" fill="var(--crimson)"/>`).join('');
+  let area = w.length>1 ? `<path d="${d}L${xs(w.length-1)} ${H-pad}L${xs(0)} ${H-pad}Z" fill="url(#g)" opacity=".5"/>`:'';
+  document.getElementById('chart').innerHTML=`
+    <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="var(--crimson)" stop-opacity=".22"/><stop offset="1" stop-color="var(--crimson)" stop-opacity="0"/>
+    </linearGradient></defs>
+    <line x1="0" y1="${gy.toFixed(1)}" x2="${W}" y2="${gy.toFixed(1)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="${W-4}" y="${(gy-6).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--good)" font-family="Space Grotesk" font-weight="600">goal</text>
+    ${area}<path d="${d}" fill="none" stroke="var(--crimson)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}`;
+  document.getElementById('startLbl').textContent='Start '+START_W;
+  document.getElementById('goalLbl').textContent='Goal '+GOAL_W;
+
+  // history
+  const hist=document.getElementById('whist'); hist.innerHTML='';
+  [...w].reverse().forEach((p,i,arr)=>{
+    const prev=arr[i+1]; let delta='';
+    if(prev){ const d2=p.kg-prev.kg; delta=`<span class="wh-delta ${d2<=0?'down':'up'}">${d2<=0?'−':'+'}${Math.abs(d2).toFixed(1)}</span>`; }
+    const row=document.createElement('div'); row.className='wh-row';
+    row.innerHTML=`<span class="wh-d">${new Date(p.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span>
+      <span class="wh-k">${p.kg.toFixed(1)} kg ${delta}</span>`;
+    hist.appendChild(row);
+  });
+}
+function logWeight(){
+  const v=parseFloat(document.getElementById('wInput').value);
+  if(!v||v<30||v>250){ toast('Enter a weight in kg'); return; }
+  const k=todayKey();
+  const ex=state.weight.find(p=>p.date===k);
+  if(ex) ex.kg=v; else state.weight.push({date:k,kg:v});
+  state.weight.sort((a,b)=>a.date.localeCompare(b.date));
+  document.getElementById('wInput').value='';
+  saveState(); renderProgress(); toast('Weight saved');
+}
+
+/* ---------- NAV + INIT ---------- */
+function go(v){
+  ['today','plan','recipes','progress'].forEach(x=>{
+    document.getElementById('v-'+x).classList.toggle('hide',x!==v);
+  });
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  if(v==='today')renderToday(); if(v==='plan')renderPlan();
+  if(v==='recipes')renderRecipes(); if(v==='progress')renderProgress();
+  window.scrollTo(0,0);
+}
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),1700);
+}
+(async function init(){
+  await initFirebase();
+  await loadState();
+  renderToday(); renderPlan(); renderRecipes(); renderProgress();
+})();
+</script>
+</body>
+</html>
