@@ -1350,7 +1350,7 @@ function saveCustomRecipe(){
   if(!name){ toast(t('t_fill')); return; }
   if(!_mealItems.length){ toast(t('add_item_first')); return; }
   const tt=mealTotals(), meal=document.getElementById('cr_meal').value;
-  const ing=_mealItems.map(it=>[`${it.cal} ${t('kcal').trim()}`, it.name]);
+  const ing = _mealItems.map(it => ({   amount: ${it.cal} kcal,   name: it.name }));
   const steps=document.getElementById('cr_steps').value.split('\n').map(s=>s.trim()).filter(Boolean);
   if(!state.custom) state.custom=[];
   state.custom.push({id:'c'+Date.now(), name, slot:meal, cat:meal, time:0, kind:'quick', cal:tt.cal,p:tt.p,c:tt.c,f:tt.f, sub:'', ing, steps, items:_mealItems.slice(), custom:true});
