@@ -1238,16 +1238,51 @@ function renderRecipes(){
 /* ---------- COMMUNITY RECIPES (public, admin-approved) ---------- */
 async function fetchCommunity(){
   if(!db) return null;
-  try{ const snap=await db.collection('recipes').where('approved','==',true).limit(60).get();
-    const arr=[]; snap.forEach(d=>{ const v=d.data()||{}; 
-      // Safely convert objects from Firestore back to nested arrays for front-end compatibility
-      const cleanIng = (v.ing || []).map(item => {
-        if (item && typeof item === 'object' && !Array.isArray(item)) {
-          return [item.amt || '', item.name || ''];
+  try{ 
+    const snap=await db.collection('recipes').where('approved','==',true).limit(60).get();
+    const arr=[]; 
+    snap.forEach(d=>{ 
+      try {
+        const v=d.data()||{}; 
+        
+        // Safely parse and sanitize ingredients to prevent application crashes
+        let cleanIng = [];
+        if (Array.isArray(v.ing)) {
+          cleanIng = v.ing.map(item => {
+            if (item && typeof item === 'object' && !Array.isArray(item)) {
+              return [item.amt || '', item.name || ''];
+            }
+            if (Array.isArray(item)) {
+              return [item[0] || '', item[1] || ''];
+            }
+            return ['', String(item || '')];
+          });
         }
-        return item;
-      });
-      arr.push({id:d.id, name:v.name||'—', slot:v.slot||'Lunch', cat:v.cat||v.slot||'Lunch', cal:v.cal||0,p:v.p||0,c:v.c||0,f:v.f||0, ing:cleanIng, steps:v.steps||[], author:v.author||'—', created:v.created||0, community:true}); 
+
+        // Safely parse steps
+        let cleanSteps = [];
+        if (Array.isArray(v.steps)) {
+          cleanSteps = v.steps.map(s => String(s || ''));
+        }
+
+        arr.push({
+          id:d.id, 
+          name:v.name||'—', 
+          slot:v.slot||'Lunch', 
+          cat:v.cat||v.slot||'Lunch', 
+          cal:Number(v.cal)||0,
+          p:Number(v.p)||0,
+          c:Number(v.c)||0,
+          f:Number(v.f)||0, 
+          ing:cleanIng, 
+          steps:cleanSteps, 
+          author:v.author||'—', 
+          created:v.created||0, 
+          community:true
+        }); 
+      } catch(innerErr) {
+        console.warn('Skipping corrupted recipe row:', innerErr);
+      }
     });
     arr.sort((a,b)=>b.created-a.created); return arr;
   }catch(e){ console.warn('Community read failed:', e.message); return null; }
@@ -1287,7 +1322,7 @@ async function publishRecipe(){
   if(!state.nick){ toast(t('need_nick')); return; }
   const r=curRecipe; if(!r) return;
 
-  // Flatten/convert nested ingredient arrays into objects compatible with Firestore
+  // Flatten nested ingredient arrays into standard objects to keep Firestore happy
   const safeIngredients = (r.ing || []).map(item => {
     if (Array.isArray(item)) {
       return { amt: String(item[0] || ''), name: String(item[1] || '') };
@@ -1316,7 +1351,7 @@ async function publishRecipe(){
 function saveCommToMine(){
   const r=curRecipe; if(!r) return; if(!state.custom) state.custom=[];
   
-  // Revert back to nested array format when user saves a community recipe to their local storage
+  // Restore expected local front-end nested array formats when saving down from the cloud
   const localIngredients = (r.ing || []).map(item => {
     if (item && typeof item === 'object' && !Array.isArray(item)) {
       return [item.amt || '', item.name || ''];
@@ -1329,8 +1364,7 @@ function saveCommToMine(){
 }
 
 async function approveRecipe(id){ if(!isAdmin()||!db) return; try{ await db.collection('recipes').doc(id).update({approved:true}); toast(t('approved_toast')); renderCommunity(); }catch(e){ toast(t('comm_rules_hint')); } }
-async function rejectRecipe(id){ if(!isAdmin()
-
+async function rejectRecipe(id){ if(!isAdmin()||!db) return; try{ await db.collection('recipes').doc(id).delete(); toast(t('removed')); renderCommunity(); }catch(e){ toast(t('comm_rules_hint')); } }
 /* ---------- SHEET ---------- */
 let curRecipe=null;
 function openSheet(id){ const r=byId(id); if(r) showRecipeSheet(r); }
