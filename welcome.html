@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cut — Your fat-loss plan, all in one app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14161B; --crimson:#C8102E; --crimson-soft:#E8556B; --good:#16B877; --amber:#F2A218;
+    --base:#F6F4F0; --surface:#FFFFFF; --surface-2:#FBFAF8; --line:#E8E3DC; --muted:#74706A; --muted-2:#9A958D;
+    --disp:'Space Grotesk',sans-serif; --body:'Inter',sans-serif;
+    --shadow:0 1px 2px rgba(20,22,27,.04),0 14px 40px -16px rgba(20,22,27,.18);
+  }
+  html[dir=rtl]{ --disp:'Cairo',sans-serif; --body:'Tajawal',sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--base);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;line-height:1.04}
+  html[dir=rtl] h1,html[dir=rtl] h2,html[dir=rtl] h3{letter-spacing:0}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  .num{font-family:var(--disp);font-variant-numeric:tabular-nums;font-weight:700}
+
+  header{position:sticky;top:0;z-index:30;background:rgba(246,244,240,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .hrow{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-family:var(--disp);font-weight:700;font-size:23px;letter-spacing:-.04em}
+  .logo b{color:var(--crimson)}
+  .hactions{display:flex;align-items:center;gap:10px}
+  .lang{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--surface);font-family:var(--disp);font-weight:700;font-size:14px}
+  .cta{background:var(--crimson);color:#fff;font-family:var(--disp);font-weight:700;font-size:14px;padding:11px 18px;border-radius:12px;border:none;cursor:pointer;transition:transform .15s,box-shadow .2s}
+  .cta:hover{transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(200,16,46,.6)}
+  .cta.ghost{background:var(--ink)}
+
+  section{padding:72px 0}
+  .eyebrow{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson)}
+  html[dir=rtl] .eyebrow{letter-spacing:0}
+
+  /* HERO */
+  .hero{padding:56px 0 64px}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .hero h1{font-size:clamp(40px,7vw,66px);margin:16px 0 18px}
+  .hero h1 .hl{color:var(--crimson)}
+  .hero p.lead{font-size:18px;color:var(--muted);line-height:1.6;max-width:30ch}
+  .hero .btns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+  .hero .btns .cta{font-size:15px;padding:14px 22px}
+  .hero .tags{display:flex;gap:18px;margin-top:26px;flex-wrap:wrap;font-size:13px;color:var(--muted);font-family:var(--disp);font-weight:500}
+  .hero .tags span{display:flex;align-items:center;gap:6px}
+  .dot{width:6px;height:6px;border-radius:99px;background:var(--good)}
+
+  /* phone mock */
+  .mock{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:20px;box-shadow:var(--shadow);max-width:340px;margin-inline:auto;animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .mock .mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .mock .mlogo{font-family:var(--disp);font-weight:700;font-size:17px}.mock .mlogo b{color:var(--crimson)}
+  .mock .chip{width:46px;height:28px;background:var(--ink);border-radius:99px}
+  .ringwrap{display:flex;align-items:center;gap:16px}
+  .ring{position:relative;width:118px;height:118px;flex:none}
+  .ring svg{transform:rotate(-90deg)}
+  .ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ringc .big{font-family:var(--disp);font-weight:700;font-size:27px;line-height:1}
+  .ringc .u{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+  html[dir=rtl] .ringc .u{letter-spacing:0}
+  .bars{flex:1;display:flex;flex-direction:column;gap:10px}
+  .b .bt{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:var(--muted);font-family:var(--disp)}
+  .b .bt b{color:var(--ink)}
+  .bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px}
+  .streak{display:flex;align-items:center;gap:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:11px 13px;margin-top:14px}
+  .streak .fl{font-size:22px}
+  .streak .sn{font-family:var(--disp);font-weight:700;font-size:14px}.streak .sn b{color:var(--crimson);font-size:18px}
+  .streak .ss{font-size:10.5px;color:var(--muted)}
+
+  /* FEATURES */
+  .features{background:var(--surface)}
+  .sec-h{text-align:center;max-width:34ch;margin:0 auto 44px}
+  .sec-h h2{font-size:clamp(30px,4.4vw,42px);margin:12px 0 12px}
+  .sec-h p{color:var(--muted);font-size:16px;line-height:1.6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:14px}
+  .fcard{border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--surface-2);transition:transform .18s,box-shadow .2s}
+  .fcard:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .fcard .ico{font-size:24px;margin-bottom:12px}
+  .fcard h3{font-size:16px;margin-bottom:7px}
+  .fcard p{font-size:13.5px;color:var(--muted);line-height:1.55}
+
+  /* HOW TO */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;counter-reset:s}
+  .step{border:1px solid var(--line);border-radius:18px;padding:22px 20px;background:var(--surface);position:relative}
+  .step .n{counter-increment:s;font-family:var(--disp);font-weight:700;font-size:14px;width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center;margin-bottom:14px}
+  .step .n::before{content:counter(s)}
+  .step h3{font-size:16px;margin-bottom:7px}
+  .step p{font-size:13.5px;color:var(--muted);line-height:1.55}
+
+  /* COMPETE */
+  .compete{background:var(--ink);color:#fff}
+  .compete .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .compete h2{font-size:clamp(28px,4vw,40px);margin:12px 0 14px;color:#fff}
+  .compete p{color:#B9B4AC;font-size:16px;line-height:1.6;max-width:34ch}
+  .compete .eyebrow{color:var(--crimson-soft)}
+  .lb{background:#1E2128;border:1px solid #2A2E36;border-radius:20px;padding:8px;max-width:380px;margin-inline:auto;width:100%}
+  .lbrow{display:flex;align-items:center;gap:13px;padding:14px 14px}
+  .lbrow+.lbrow{border-top:1px solid #2A2E36}
+  .lbrow .r{font-family:var(--disp);font-weight:700;font-size:17px;width:26px;text-align:center}
+  .lbrow .nm{flex:1;font-weight:600;font-size:14.5px}
+  .lbrow .st{font-family:var(--disp);font-weight:700;font-size:15px}
+  .lbrow .st span{font-size:10px;color:#8A8680;font-weight:500}
+  .lbrow.me{background:#262A32;border-radius:14px}
+
+  /* CTA strip */
+  .strip{text-align:center}
+  .strip h2{font-size:clamp(28px,4vw,40px);margin-bottom:16px}
+  .strip p{color:var(--muted);font-size:16px;margin-bottom:26px}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;text-align:center}
+  footer .logo{font-size:18px;margin-bottom:8px}
+  footer .cp{font-family:var(--disp);font-weight:600;font-size:12.5px;color:var(--muted)}
+  footer .mt{font-size:12px;color:var(--muted-2);margin-top:6px}
+
+  @media (max-width:760px){
+    .hero .wrap{grid-template-columns:1fr;gap:34px}
+    .hero p.lead{max-width:none}
+    .compete .wrap{grid-template-columns:1fr;gap:30px}
+    section{padding:56px 0}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hrow">
+    <div class="logo"><b>Cut</b>.</div>
+    <div class="hactions">
+      <button class="lang" id="lang" onclick="toggleLang()">ع</button>
+      <a class="cta" href="index.html" data-i18n="open_app">Open the app</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" data-i18n="hero_eyebrow">Halal fat-loss tracker</div>
+      <h1><span data-i18n="hero_h1a">Your whole fat-loss plan,</span> <span class="hl" data-i18n="hero_h1b">in one app.</span></h1>
+      <p class="lead" data-i18n="hero_lead">Track meals, steps and weight, follow halal recipes, compete with friends, and stay consistent — in Arabic or English.</p>
+      <div class="btns">
+        <a class="cta" href="index.html" data-i18n="hero_cta">Open the app →</a>
+        <a class="cta ghost" href="#how" data-i18n="hero_cta2">See how it works</a>
+      </div>
+      <div class="tags">
+        <span><span class="dot"></span><span data-i18n="tag1">79 halal recipes</span></span>
+        <span><span class="dot"></span><span data-i18n="tag2">Arabic & English</span></span>
+        <span><span class="dot"></span><span data-i18n="tag3">Free to use</span></span>
+      </div>
+    </div>
+
+    <!-- live-looking app mock -->
+    <div class="mock" aria-hidden="true">
+      <div class="mhead"><div class="mlogo"><b>Cut</b>.</div><div class="chip"></div></div>
+      <div class="ringwrap">
+        <div class="ring">
+          <svg width="118" height="118" viewBox="0 0 118 118">
+            <circle cx="59" cy="59" r="50" stroke="var(--line)" stroke-width="11" fill="none"/>
+            <circle cx="59" cy="59" r="50" stroke="var(--crimson)" stroke-width="11" fill="none" stroke-linecap="round"
+                    stroke-dasharray="314" stroke-dashoffset="120"/>
+          </svg>
+          <div class="ringc"><div class="big">1,240</div><div class="u" data-i18n="kcal_left">kcal left</div></div>
+        </div>
+        <div class="bars">
+          <div class="b"><div class="bt"><span data-i18n="protein">Protein</span><span><b>120</b>/180g</span></div><div class="bar"><i style="width:66%;background:var(--crimson)"></i></div></div>
+          <div class="b"><div class="bt"><span data-i18n="carbs">Carbs</span><span><b>90</b>/135g</span></div><div class="bar"><i style="width:67%;background:#3F7CD6"></i></div></div>
+          <div class="b"><div class="bt"><span data-i18n="fat">Fat</span><span><b>28</b>/50g</span></div><div class="bar"><i style="width:56%;background:var(--amber)"></i></div></div>
+        </div>
+      </div>
+      <div class="streak">
+        <div class="fl">🔥</div>
+        <div><div class="sn"><b>12</b> <span data-i18n="streak_day">day streak</span></div>
+        <div class="ss" data-i18n="streak_sub">Logged every day this week</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="eyebrow" data-i18n="feat_eyebrow">Everything in one place</div>
+      <h2 data-i18n="feat_h2">One app for the whole journey</h2>
+      <p data-i18n="feat_p">No spreadsheets, no five different apps. Cut handles food, movement, progress and motivation together.</p>
+    </div>
+    <div class="grid" id="featGrid"></div>
+  </div>
+</section>
+
+<!-- HOW TO -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-h">
+      <div class="eyebrow" data-i18n="how_eyebrow">Getting started</div>
+      <h2 data-i18n="how_h2">Up and running in five steps</h2>
+      <p data-i18n="how_p">No tutorials needed — the app guides you. Here's the whole flow.</p>
+    </div>
+    <div class="steps" id="stepGrid"></div>
+  </div>
+</section>
+
+<!-- COMPETE -->
+<section class="compete">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" data-i18n="comp_eyebrow">Stay motivated</div>
+      <h2 data-i18n="comp_h2">Make it a competition</h2>
+      <p data-i18n="comp_p">Pick a nickname and climb the weekly steps leaderboard. Build a meal, publish it, and let others cook it too.</p>
+    </div>
+    <div class="lb" aria-hidden="true">
+      <div class="lbrow"><div class="r">🥇</div><div class="nm">Faisal</div><div class="st">86,420<span> steps</span></div></div>
+      <div class="lbrow"><div class="r">🥈</div><div class="nm">Norah</div><div class="st">79,110<span> steps</span></div></div>
+      <div class="lbrow me"><div class="r">🥉</div><div class="nm" data-i18n="you_row">You</div><div class="st">71,540<span> steps</span></div></div>
+      <div class="lbrow"><div class="r">4</div><div class="nm">Omar</div><div class="st">64,200<span> steps</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="strip">
+  <div class="wrap">
+    <h2 data-i18n="strip_h2">Ready to start your cut?</h2>
+    <p data-i18n="strip_p">Sign in with Google to sync across your phone and laptop, or just continue as a guest.</p>
+    <a class="cta" href="index.html" style="font-size:16px;padding:16px 30px" data-i18n="strip_cta">Open the app →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><b>Cut</b>.</div>
+    <div class="cp" data-i18n="copyright">© 2026 ENG. Albaraa Alghamdi</div>
+    <div class="mt" data-i18n="foot_tag">Small steps, big results — keep going. 😊</div>
+  </div>
+</footer>
+
+<script>
+const FEATURES=[
+ ['📊','f_track_t','f_track_p'],['🍳','f_recipes_t','f_recipes_p'],['📷','f_scan_t','f_scan_p'],
+ ['🥗','f_meal_t','f_meal_p'],['👟','f_steps_t','f_steps_p'],['🏆','f_lb_t','f_lb_p'],
+ ['🌍','f_comm_t','f_comm_p'],['🔥','f_streak_t','f_streak_p'],['🌐','f_lang_t','f_lang_p'],['☁️','f_sync_t','f_sync_p']
+];
+const STEPS=[['s1_t','s1_p'],['s2_t','s2_p'],['s3_t','s3_p'],['s4_t','s4_p'],['s5_t','s5_p']];
+
+const STR={
+ en:{
+  open_app:'Open the app', hero_eyebrow:'Halal fat-loss tracker',
+  hero_h1a:'Your whole fat-loss plan,', hero_h1b:'in one app.',
+  hero_lead:'Track meals, steps and weight, follow halal recipes, compete with friends, and stay consistent — in Arabic or English.',
+  hero_cta:'Open the app →', hero_cta2:'See how it works',
+  tag1:'79 halal recipes', tag2:'Arabic & English', tag3:'Free to use',
+  kcal_left:'kcal left', protein:'Protein', carbs:'Carbs', fat:'Fat', streak_day:'day streak', streak_sub:'Logged every day this week',
+  feat_eyebrow:'Everything in one place', feat_h2:'One app for the whole journey',
+  feat_p:'No spreadsheets, no five different apps. Cut handles food, movement, progress and motivation together.',
+  f_track_t:'Daily tracking', f_track_p:'A calorie ring, macro bars and water — your whole day at a glance.',
+  f_recipes_t:'79 halal recipes', f_recipes_p:'Quick meals plus Saudi dishes like Kabsa and Maasoub, made healthy.',
+  f_scan_t:'Barcode scanner', f_scan_p:'Scan any product and log its calories and macros in seconds.',
+  f_meal_t:'Build your own meals', f_meal_p:'Add each item with its macros and get the exact total — no guessing.',
+  f_steps_t:'Step tracking', f_steps_p:'Log your steps or auto-count them, and set a daily goal.',
+  f_lb_t:'Weekly leaderboard', f_lb_p:'Compete on steps with a nickname. Rankings reset every week.',
+  f_comm_t:'Community recipes', f_comm_p:'Publish your meals so others can cook them, and save theirs.',
+  f_streak_t:'Daily streaks', f_streak_p:'Keep your logging streak alive and celebrate milestones.',
+  f_lang_t:'Arabic & English', f_lang_p:'Switch language any time, with full right-to-left support.',
+  f_sync_t:'Cloud sync', f_sync_p:'Sign in with Google and pick up where you left off on any device.',
+  how_eyebrow:'Getting started', how_h2:'Up and running in five steps', how_p:"No tutorials needed — the app guides you. Here's the whole flow.",
+  s1_t:'Sign in', s1_p:'Use Google to sync across devices, or continue as a guest on this phone.',
+  s2_t:'Set up your profile', s2_p:'Enter your age, height, weight and goal — your targets are calculated for you.',
+  s3_t:'Log your day', s3_p:'Tap a recipe, scan a barcode or build a meal. Add your steps and water.',
+  s4_t:'Track progress', s4_p:'Watch your weight chart, streak and level grow as you stay consistent.',
+  s5_t:'Compete & share', s5_p:'Climb the steps leaderboard and publish your own recipes.',
+  comp_eyebrow:'Stay motivated', comp_h2:'Make it a competition',
+  comp_p:'Pick a nickname and climb the weekly steps leaderboard. Build a meal, publish it, and let others cook it too.',
+  you_row:'You', strip_h2:'Ready to start your cut?',
+  strip_p:'Sign in with Google to sync across your phone and laptop, or just continue as a guest.',
+  strip_cta:'Open the app →', copyright:'© 2026 ENG. Albaraa Alghamdi', foot_tag:'Small steps, big results — keep going. 😊'
+ },
+ ar:{
+  open_app:'افتح التطبيق', hero_eyebrow:'متتبّع فقدان دهون حلال',
+  hero_h1a:'خطة فقدان الدهون كاملةً،', hero_h1b:'في تطبيق واحد.',
+  hero_lead:'تتبّع وجباتك وخطواتك ووزنك، واتبع وصفات حلال، ونافِس أصدقاءك، وحافظ على استمراريتك — بالعربية أو الإنجليزية.',
+  hero_cta:'افتح التطبيق →', hero_cta2:'شاهد كيف يعمل',
+  tag1:'٧٩ وصفة حلال', tag2:'عربي وإنجليزي', tag3:'مجاني',
+  kcal_left:'سعرة متبقية', protein:'بروتين', carbs:'كربوهيدرات', fat:'دهون', streak_day:'يوم متتالٍ', streak_sub:'سجّلت كل يوم هذا الأسبوع',
+  feat_eyebrow:'كل شيء في مكان واحد', feat_h2:'تطبيق واحد للرحلة كاملةً',
+  feat_p:'لا جداول ولا خمسة تطبيقات. «كت» يجمع الطعام والحركة والتقدّم والتحفيز معًا.',
+  f_track_t:'تتبّع يومي', f_track_p:'حلقة سعرات وأشرطة ماكروز وماء — يومك كاملًا بنظرة واحدة.',
+  f_recipes_t:'٧٩ وصفة حلال', f_recipes_p:'وجبات سريعة وأطباق سعودية مثل الكبسة والمعصوب بشكل صحي.',
+  f_scan_t:'ماسح الباركود', f_scan_p:'امسح أي منتج وسجّل سعراته وماكروزه في ثوانٍ.',
+  f_meal_t:'ابنِ وجباتك', f_meal_p:'أضِف كل عنصر بماكروزه واحصل على الإجمالي الدقيق — دون تخمين.',
+  f_steps_t:'تتبّع الخطوات', f_steps_p:'سجّل خطواتك أو احسبها تلقائيًا، وحدّد هدفًا يوميًا.',
+  f_lb_t:'لوحة المتصدّرين', f_lb_p:'نافِس على الخطوات باسم مستعار. يُعاد الترتيب كل أسبوع.',
+  f_comm_t:'وصفات المجتمع', f_comm_p:'انشر وجباتك ليطبخها الآخرون، واحفظ وصفاتهم.',
+  f_streak_t:'سلاسل يومية', f_streak_p:'حافظ على سلسلة تسجيلك واحتفل بالإنجازات.',
+  f_lang_t:'عربي وإنجليزي', f_lang_p:'بدّل اللغة في أي وقت مع دعم كامل للكتابة من اليمين.',
+  f_sync_t:'مزامنة سحابية', f_sync_p:'سجّل الدخول عبر Google وأكمل من حيث توقفت على أي جهاز.',
+  how_eyebrow:'البداية', how_h2:'جاهز خلال خمس خطوات', how_p:'لا حاجة لشروحات — التطبيق يرشدك. هذه هي الرحلة كاملةً.',
+  s1_t:'سجّل الدخول', s1_p:'استخدم Google للمزامنة بين الأجهزة، أو تابع كضيف على هذا الهاتف.',
+  s2_t:'أنشئ ملفك', s2_p:'أدخل عمرك وطولك ووزنك وهدفك — وتُحسب أهدافك تلقائيًا.',
+  s3_t:'سجّل يومك', s3_p:'اضغط وصفة أو امسح باركود أو ابنِ وجبة. وأضِف خطواتك وماءك.',
+  s4_t:'تابع تقدّمك', s4_p:'شاهد مخطط وزنك وسلسلتك ومستواك ينمو مع استمرارك.',
+  s5_t:'نافِس وشارك', s5_p:'تسلّق لوحة المتصدّرين وانشر وصفاتك الخاصة.',
+  comp_eyebrow:'ابقَ متحمسًا', comp_h2:'اجعلها منافسة',
+  comp_p:'اختر اسمًا مستعارًا وتسلّق لوحة المتصدّرين الأسبوعية. ابنِ وجبة وانشرها ليطبخها غيرك.',
+  you_row:'أنت', strip_h2:'جاهز لبدء رحلتك؟',
+  strip_p:'سجّل الدخول عبر Google للمزامنة بين هاتفك وحاسوبك، أو تابع كضيف.',
+  strip_cta:'افتح التطبيق →', copyright:'© ٢٠٢٦ ENG. Albaraa Alghamdi', foot_tag:'خطوة بخطوة نحو هدفك — واصِل. 😊'
+ }
+};
+let lang='en';
+const t=k=>(STR[lang]&&STR[lang][k])||STR.en[k]||k;
+
+function buildLists(){
+  document.getElementById('featGrid').innerHTML=FEATURES.map(f=>`<div class="fcard"><div class="ico">${f[0]}</div><h3>${t(f[1])}</h3><p>${t(f[2])}</p></div>`).join('');
+  document.getElementById('stepGrid').innerHTML=STEPS.map(s=>`<div class="step"><div class="n"></div><h3>${t(s[0])}</h3><p>${t(s[1])}</p></div>`).join('');
+}
+function apply(){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.getElementById('lang').textContent=lang==='ar'?'EN':'ع';
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.getAttribute('data-i18n')));
+  buildLists();
+}
+function toggleLang(){ lang=lang==='ar'?'en':'ar'; apply(); }
+apply();
+</script>
+</body>
+</html>
