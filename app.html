@@ -1239,16 +1239,27 @@ function renderRecipes(){
 async function fetchCommunity(){
   if(!db) return null;
   try{ const snap=await db.collection('recipes').where('approved','==',true).limit(60).get();
-    const arr=[]; snap.forEach(d=>{ const v=d.data()||{}; arr.push({id:d.id, name:v.name||'—', slot:v.slot||'Lunch', cat:v.cat||v.slot||'Lunch', cal:v.cal||0,p:v.p||0,c:v.c||0,f:v.f||0, ing:v.ing||[], steps:v.steps||[], author:v.author||'—', created:v.created||0, community:true}); });
+    const arr=[]; snap.forEach(d=>{ const v=d.data()||{}; 
+      // Safely convert objects from Firestore back to nested arrays for front-end compatibility
+      const cleanIng = (v.ing || []).map(item => {
+        if (item && typeof item === 'object' && !Array.isArray(item)) {
+          return [item.amt || '', item.name || ''];
+        }
+        return item;
+      });
+      arr.push({id:d.id, name:v.name||'—', slot:v.slot||'Lunch', cat:v.cat||v.slot||'Lunch', cal:v.cal||0,p:v.p||0,c:v.c||0,f:v.f||0, ing:cleanIng, steps:v.steps||[], author:v.author||'—', created:v.created||0, community:true}); 
+    });
     arr.sort((a,b)=>b.created-a.created); return arr;
   }catch(e){ console.warn('Community read failed:', e.message); return null; }
 }
+
 async function fetchPending(){
   if(!db||!isAdmin()) return null;
   try{ const snap=await db.collection('recipes').where('approved','==',false).limit(50).get();
     const arr=[]; snap.forEach(d=>{ const v=d.data()||{}; arr.push({id:d.id, name:v.name||'—', author:v.author||'—', cal:v.cal||0}); }); return arr;
   }catch(e){ console.warn('Pending read failed:', e.message); return null; }
 }
+
 async function renderCommunity(){
   const grid=document.getElementById('rgrid');
   if(!db){ grid.innerHTML=`<div class="empty" style="grid-column:1/-1">${t('comm_signin')}</div>`; return; }
@@ -1268,23 +1279,57 @@ async function renderCommunity(){
     : `<div class="empty" style="grid-column:1/-1">${t('comm_empty')}</div>`;
   grid.innerHTML=html;
 }
+
 function openComm(i){ const r=(window._commArr||[])[i]; if(r) showRecipeSheet(r); }
+
 async function publishRecipe(){
   if(!db||!uid){ toast(t('comm_signin')); return; }
   if(!state.nick){ toast(t('need_nick')); return; }
   const r=curRecipe; if(!r) return;
+
+  // Flatten/convert nested ingredient arrays into objects compatible with Firestore
+  const safeIngredients = (r.ing || []).map(item => {
+    if (Array.isArray(item)) {
+      return { amt: String(item[0] || ''), name: String(item[1] || '') };
+    }
+    return item;
+  });
+
   try{
-    await db.collection('recipes').add({ name:r.name, slot:r.slot, cat:r.cat||r.slot, cal:Math.min(5000,r.cal||0), p:r.p||0,c:r.c||0,f:r.f||0, ing:r.ing||[], steps:r.steps||[], author:state.nick, authorUid:uid, approved:false, created:Date.now() });
+    await db.collection('recipes').add({ 
+      name:r.name, 
+      slot:r.slot, 
+      cat:r.cat||r.slot, 
+      cal:Math.min(5000,r.cal||0), 
+      p:r.p||0,c:r.c||0,f:r.f||0, 
+      ing: safeIngredients, 
+      steps:r.steps||[], 
+      author:state.nick, 
+      authorUid:uid, 
+      approved:false, 
+      created:Date.now() 
+    });
     closeSheet(); toast(t('publish_pending'));
   }catch(e){ console.warn('Publish failed:', e.message); toast(t('comm_rules_hint')); }
 }
+
 function saveCommToMine(){
   const r=curRecipe; if(!r) return; if(!state.custom) state.custom=[];
-  state.custom.push({id:'c'+Date.now(), name:r.name, slot:r.slot, cat:r.cat||r.slot, time:0, kind:'quick', cal:r.cal,p:r.p,c:r.c,f:r.f, sub:'', ing:r.ing||[], steps:r.steps||[], custom:true});
+  
+  // Revert back to nested array format when user saves a community recipe to their local storage
+  const localIngredients = (r.ing || []).map(item => {
+    if (item && typeof item === 'object' && !Array.isArray(item)) {
+      return [item.amt || '', item.name || ''];
+    }
+    return item;
+  });
+
+  state.custom.push({id:'c'+Date.now(), name:r.name, slot:r.slot, cat:r.cat||r.slot, time:0, kind:'quick', cal:r.cal,p:r.p,c:r.c,f:r.f, sub:'', ing:localIngredients, steps:r.steps||[], custom:true});
   saveState(); renderToday(); toast(t('saved_to_mine'));
 }
+
 async function approveRecipe(id){ if(!isAdmin()||!db) return; try{ await db.collection('recipes').doc(id).update({approved:true}); toast(t('approved_toast')); renderCommunity(); }catch(e){ toast(t('comm_rules_hint')); } }
-async function rejectRecipe(id){ if(!isAdmin()||!db) return; try{ await db.collection('recipes').doc(id).delete(); toast(t('removed')); renderCommunity(); }catch(e){ toast(t('comm_rules_hint')); } }
+async function rejectRecipe(id){ if(!isAdmin()
 
 /* ---------- SHEET ---------- */
 let curRecipe=null;
